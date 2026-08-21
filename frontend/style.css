@@ -1,0 +1,427 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --primary: #6366f1;
+    --primary-dark: #4f46e5;
+    --background: #f5f7ff;
+    --card: #ffffff;
+    --text: #172033;
+    --muted: #667085;
+    --border: #e5e7eb;
+
+    --positive: #16a34a;
+    --negative: #dc2626;
+    --neutral: #d97706;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    min-height: 100vh;
+    color: var(--text);
+
+    background:
+        radial-gradient(
+            circle at top left,
+            rgba(99, 102, 241, 0.18),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at bottom right,
+            rgba(20, 184, 166, 0.15),
+            transparent 30%
+        ),
+        var(--background);
+
+    padding: 40px 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 1050px;
+    margin: 0 auto;
+}
+
+/* ================= HEADER ================= */
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+header h1 {
+    font-size: 48px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 10px;
+
+    background: linear-gradient(
+        135deg,
+        #6366f1,
+        #8b5cf6,
+        #14b8a6
+    );
+
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+header p {
+    color: var(--muted);
+    font-size: 20px;
+}
+
+/* ================= MAIN CARD ================= */
+
+main {
+    background: rgba(255, 255, 255, 0.92);
+
+    padding: 35px;
+
+    border-radius: 22px;
+
+    border: 1px solid rgba(255, 255, 255, 0.8);
+
+    box-shadow:
+        0 20px 50px rgba(31, 41, 55, 0.10),
+        0 5px 15px rgba(31, 41, 55, 0.05);
+
+    backdrop-filter: blur(10px);
+}
+
+/* ================= INPUT ================= */
+
+.input-section label {
+    display: block;
+
+    font-size: 24px;
+
+    font-weight: 700;
+
+    margin-bottom: 10px;
+
+    color: #344054;
+}
+
+textarea {
+    width: 100%;
+
+    min-height: 150px;
+
+    padding: 17px;
+
+    font-family: inherit;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.6;
+
+    color: var(--text);
+
+    background: #fbfcff;
+
+    border: 2px solid var(--border);
+
+    border-radius: 14px;
+
+    resize: vertical;
+
+    transition: all 0.2s ease;
+}
+
+textarea::placeholder {
+    color: #98a2b3;
+}
+
+textarea:hover {
+    border-color: #c7c9f8;
+}
+
+textarea:focus {
+    outline: none;
+
+    border-color: var(--primary);
+
+    background: white;
+
+    box-shadow:
+        0 0 0 4px rgba(99, 102, 241, 0.12);
+}
+
+/* ================= CHARACTER COUNT ================= */
+
+.character-count {
+    text-align: right;
+
+    color: #98a2b3;
+
+    font-size: 13px;
+
+    margin: 7px 3px 16px;
+}
+
+/* ================= BUTTON ================= */
+
+button {
+    width: 100%;
+
+    padding: 15px;
+
+    border: none;
+
+    border-radius: 13px;
+
+    font-family: inherit;
+    font-size: 20px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    color: white;
+
+    background: linear-gradient(
+        135deg,
+        var(--primary),
+        var(--primary-dark)
+    );
+
+    box-shadow:
+        0 10px 25px rgba(99, 102, 241, 0.28);
+
+    transition: all 0.2s ease;
+}
+
+button:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 14px 30px rgba(99, 102, 241, 0.35);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+/* ================= LOADING ================= */
+
+.loading {
+    text-align: center;
+
+    margin-top: 25px;
+
+    padding: 14px;
+
+    border-radius: 12px;
+
+    color: var(--primary-dark);
+
+    background: #eef2ff;
+
+    font-weight: 700;
+}
+
+/* ================= RESULT ================= */
+
+.result {
+    margin-top: 30px;
+
+    padding-top: 28px;
+
+    border-top: 1px solid var(--border);
+}
+
+.result h2 {
+    margin-bottom: 20px;
+
+    font-size: 22px;
+}
+
+/* ================= SENTIMENT ================= */
+
+.sentiment-box {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 20px;
+
+    background: #f8fafc;
+
+    border: 1px solid var(--border);
+
+    border-radius: 14px;
+
+    margin-bottom: 22px;
+}
+
+.sentiment-box span {
+    color: var(--muted);
+
+    font-weight: 600;
+}
+
+#sentiment {
+    text-transform: uppercase;
+
+    padding: 7px 14px;
+
+    border-radius: 50px;
+
+    background: #eef2ff;
+
+    color: var(--primary-dark);
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.5px;
+}
+
+/* ================= CONFIDENCE ================= */
+
+.confidence {
+    margin-bottom: 28px;
+}
+
+.confidence-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-bottom: 9px;
+
+    color: #475467;
+
+    font-weight: 600;
+}
+
+.progress-bar {
+    width: 100%;
+
+    height: 12px;
+
+    background: #e5e7eb;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+}
+
+.progress {
+    height: 100%;
+
+    width: 0%;
+
+    border-radius: 20px;
+
+    background: linear-gradient(
+        90deg,
+        #6366f1,
+        #8b5cf6
+    );
+
+    transition: width 0.5s ease;
+}
+
+/* ================= PROBABILITIES ================= */
+
+.probabilities {
+    margin-top: 10px;
+}
+
+.probabilities h3 {
+    margin-bottom: 15px;
+
+    font-size: 17px;
+}
+
+.probability-row {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 13px 0;
+
+    border-bottom: 1px solid #edf0f5;
+
+    color: #475467;
+
+    font-size: 16px;
+}
+
+.probability-row span:last-child {
+    font-weight: 800;
+
+    color: var(--text);
+}
+
+/* ================= ERROR ================= */
+
+.error {
+    margin-top: 20px;
+
+    padding: 15px;
+
+    border-radius: 12px;
+
+    border: 1px solid #fecaca;
+
+    background: #fef2f2;
+
+    color: var(--negative);
+
+    font-weight: 600;
+}
+
+/* ================= HIDDEN ================= */
+
+.hidden {
+    display: none;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 600px) {
+
+    body {
+        padding: 20px 12px;
+    }
+
+    header h1 {
+        font-size: 32px;
+    }
+
+    main {
+        padding: 23px;
+
+        border-radius: 18px;
+    }
+
+    textarea {
+        min-height: 150px;
+    }
+
+    .sentiment-box {
+        align-items: flex-start;
+
+        gap: 12px;
+
+        flex-direction: column;
+    }
+}
+
+footer {
+    text-align: center;
+    font-size: 18px;
+    color: #000000;
+    margin-top: 20px;
+    letter-spacing: 0.5px;
+}
