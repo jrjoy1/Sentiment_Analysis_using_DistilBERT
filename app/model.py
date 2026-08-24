@@ -7,13 +7,7 @@ from transformers import (
 )
 
 
-MODEL_PATH = r"D:\sentiment_analysis_project\Model\distilbert_final-20260821T175610Z-1-001\distilbert_final"
-
-
-if not os.path.exists(MODEL_PATH):
-    raise FileNotFoundError(
-        f"Model path not found: {MODEL_PATH}"
-    )
+MODEL_PATH = "mdjrjoy/distilbert-fine-tuned"
 
 
 tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH)
