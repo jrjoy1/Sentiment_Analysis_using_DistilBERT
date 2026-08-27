@@ -1,4 +1,5 @@
 const reviewInput = document.getElementById("review");
+const modelSelect = document.getElementById("model");
 const charCount = document.getElementById("charCount");
 const analyzeBtn = document.getElementById("analyzeBtn");
 
@@ -11,113 +12,232 @@ const confidenceValue = document.getElementById("confidenceValue");
 const confidenceBar = document.getElementById("confidenceBar");
 
 const negativeProbability =
-    document.getElementById("negativeProbability");
+document.getElementById("negativeProbability");
 
 const neutralProbability =
-    document.getElementById("neutralProbability");
+document.getElementById("neutralProbability");
 
 const positiveProbability =
-    document.getElementById("positiveProbability");
+document.getElementById("positiveProbability");
 
+// ==============================
+// CHARACTER COUNT
+// ==============================
 
 reviewInput.addEventListener("input", () => {
 
-    charCount.textContent = reviewInput.value.length;
+
+charCount.textContent =
+    reviewInput.value.length;
+
 
 });
 
+// ==============================
+// ANALYZE SENTIMENT
+// ==============================
 
 analyzeBtn.addEventListener("click", async () => {
 
-    const text = reviewInput.value.trim();
 
-    if (!text) {
-        showError("Please enter a customer review.");
-        return;
-    }
+const text = reviewInput.value.trim();
 
-    result.classList.add("hidden");
-    errorBox.classList.add("hidden");
-    loading.classList.remove("hidden");
-
-    try {
-
-        const response = await fetch(
-            "http://127.0.0.1:8000/predict",
-            {
-                method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify({
-                    text: text
-                })
-            }
-        );
+const model = modelSelect.value;
 
 
-        const data = await response.json();
+// --------------------------
+// Validate input
+// --------------------------
+
+if (!text) {
+
+    showError(
+        "Please enter a customer review."
+    );
+
+    return;
+}
 
 
-        if (!response.ok) {
-            throw new Error(
-                data.detail || "Prediction failed."
-            );
+// --------------------------
+// Reset UI
+// --------------------------
+
+result.classList.add("hidden");
+
+errorBox.classList.add("hidden");
+
+loading.classList.remove("hidden");
+
+analyzeBtn.disabled = true;
+
+
+try {
+
+    // --------------------------
+    // Send request to API
+    // --------------------------
+
+    const response = await fetch(
+        "http://127.0.0.1:8000/predict",
+        {
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                text: text,
+                model: model
+            })
         }
+    );
 
 
-        sentiment.textContent = data.sentiment;
+    // --------------------------
+    // Read response
+    // --------------------------
+
+    const data = await response.json();
 
 
-        const confidence =
-            data.confidence * 100;
+    // --------------------------
+    // Handle API error
+    // --------------------------
 
-        confidenceValue.textContent =
-            confidence.toFixed(2) + "%";
+    if (!response.ok) {
 
-        confidenceBar.style.width =
-            confidence + "%";
-
-
-        negativeProbability.textContent =
-            (data.probabilities.negative * 100).toFixed(2) + "%";
-
-        neutralProbability.textContent =
-            (data.probabilities.neutral * 100).toFixed(2) + "%";
-
-        positiveProbability.textContent =
-            (data.probabilities.positive * 100).toFixed(2) + "%";
-
-
-        result.classList.remove("hidden");
-
+        throw new Error(
+            data.detail || "Prediction failed."
+        );
     }
 
-    catch (error) {
 
-        showError(
-            "Could not connect to the sentiment API."
+    // --------------------------
+    // Display sentiment
+    // --------------------------
+
+    sentiment.textContent =
+        data.sentiment;
+
+
+    // --------------------------
+    // Confidence
+    // --------------------------
+
+    const confidence =
+        data.confidence * 100;
+
+    confidenceValue.textContent =
+        confidence.toFixed(2) + "%";
+
+    confidenceBar.style.width =
+        confidence + "%";
+
+
+    // --------------------------
+    // Probabilities
+    // --------------------------
+
+    negativeProbability.textContent =
+        getProbability(
+            data.probabilities,
+            "negative"
         );
 
-        console.error(error);
+    neutralProbability.textContent =
+        getProbability(
+            data.probabilities,
+            "neutral"
+        );
 
-    }
+    positiveProbability.textContent =
+        getProbability(
+            data.probabilities,
+            "positive"
+        );
 
-    finally {
 
-        loading.classList.add("hidden");
+    // --------------------------
+    // Show result
+    // --------------------------
 
-    }
+    result.classList.remove("hidden");
+
+}
+
+
+catch (error) {
+
+    console.error(error);
+
+    showError(
+        error.message ||
+        "Could not connect to the sentiment API."
+    );
+
+}
+
+
+finally {
+
+    loading.classList.add("hidden");
+
+    analyzeBtn.disabled = false;
+
+}
+
 
 });
 
+// ==============================
+// GET PROBABILITY
+// ==============================
+
+function getProbability(
+probabilities,
+label
+) {
+
+
+// Handles both lowercase and
+// uppercase model labels.
+
+const key = Object.keys(
+    probabilities
+).find(
+    key =>
+        key.toLowerCase() ===
+        label.toLowerCase()
+);
+
+
+if (!key) {
+    return "0%";
+}
+
+
+return (
+    probabilities[key] * 100
+).toFixed(2) + "%";
+
+
+}
+
+// ==============================
+// SHOW ERROR
+// ==============================
 
 function showError(message) {
 
-    errorBox.textContent = message;
 
-    errorBox.classList.remove("hidden");
+errorBox.textContent =
+    message;
+
+errorBox.classList.remove(
+    "hidden"
+);
+
 
 }

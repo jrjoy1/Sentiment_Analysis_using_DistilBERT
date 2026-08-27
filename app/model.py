@@ -1,5 +1,3 @@
-import os
-
 import torch
 from transformers import (
     AutoModelForSequenceClassification,
@@ -7,20 +5,80 @@ from transformers import (
 )
 
 
-MODEL_PATH = "mdjrjoy/distilbert-fine-tuned"
+# ==============================
+# MODEL PATHS
+# ==============================
+
+DISTILBERT_PATH = "mdjrjoy/distilbert-fine-tuned"
+
+XLM_ROBERTA_PATH = "mdjrjoy/xlm-roberta-based"
 
 
-tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH)
+# ==============================
+# LOAD DISTILBERT
+# ==============================
 
-model = AutoModelForSequenceClassification.from_pretrained(
-    MODEL_PATH
+distilbert_tokenizer = AutoTokenizer.from_pretrained(
+    DISTILBERT_PATH
 )
 
-model.to("cpu")
-model.eval()
+distilbert_model = AutoModelForSequenceClassification.from_pretrained(
+    DISTILBERT_PATH
+)
+
+distilbert_model.to("cpu")
+distilbert_model.eval()
 
 
-def predict_sentiment(text: str):
+# ==============================
+# LOAD XLM-ROBERTA
+# ==============================
+
+xlm_roberta_tokenizer = AutoTokenizer.from_pretrained(
+    XLM_ROBERTA_PATH
+)
+
+xlm_roberta_model = AutoModelForSequenceClassification.from_pretrained(
+    XLM_ROBERTA_PATH
+)
+
+xlm_roberta_model.to("cpu")
+xlm_roberta_model.eval()
+
+
+# ==============================
+# PREDICTION FUNCTION
+# ==============================
+
+def predict_sentiment(
+    text: str,
+    model_name: str = "distilbert"
+):
+
+    # --------------------------
+    # Select model
+    # --------------------------
+
+    if model_name == "distilbert":
+
+        tokenizer = distilbert_tokenizer
+        model = distilbert_model
+
+    elif model_name == "xlm-roberta":
+
+        tokenizer = xlm_roberta_tokenizer
+        model = xlm_roberta_model
+
+    else:
+
+        raise ValueError(
+            "Invalid model. Choose 'distilbert' or 'xlm-roberta'."
+        )
+
+
+    # --------------------------
+    # Tokenization
+    # --------------------------
 
     inputs = tokenizer(
         text,
@@ -29,24 +87,48 @@ def predict_sentiment(text: str):
         max_length=128,
     )
 
-    # DistilBERT does not need token_type_ids
+    # Remove token_type_ids if a tokenizer provides them.
+    # This prevents compatibility problems with models
+    # such as DistilBERT.
     inputs.pop("token_type_ids", None)
 
+
+    # --------------------------
+    # Prediction
+    # --------------------------
+
     with torch.no_grad():
+
         outputs = model(**inputs)
+
+
+    # --------------------------
+    # Probabilities
+    # --------------------------
 
     probabilities = torch.softmax(
         outputs.logits,
         dim=1
     )[0]
 
+
+    # --------------------------
+    # Predicted class
+    # --------------------------
+
     prediction = torch.argmax(
         probabilities
     ).item()
 
-    sentiment = model.config.id2label[prediction]
+
+    sentiment = model.config.id2label[prediction].upper()
 
     confidence = probabilities[prediction].item()
+
+
+    # --------------------------
+    # All probabilities
+    # --------------------------
 
     all_probabilities = {
         model.config.id2label[i]: round(
@@ -56,8 +138,14 @@ def predict_sentiment(text: str):
         for i in range(len(probabilities))
     }
 
+
+    # --------------------------
+    # Return result
+    # --------------------------
+
     return {
         "sentiment": sentiment,
         "confidence": round(confidence, 4),
         "probabilities": all_probabilities,
+        "model": model_name,
     }

@@ -1,115 +1,147 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Sentiment Analysis AI</title>
 
-    <link rel="stylesheet" href="style.css">
+<title>Sentiment Analysis AI</title>
+
+<link rel="stylesheet" href="style.css">
+
+
 </head>
 
 <body>
 
-    <div class="container">
 
-        <header>
-            <h1>Sentiment Analysis AI</h1>
-            <p>Analyze customer reviews using DistilBERT</p>
-        </header>
+<div class="container">
 
-        <main>
+    <header>
+        <h1>Sentiment Analysis AI</h1>
+        <p>Analyze customer reviews using AI models</p>
+    </header>
 
-            <div class="input-section">
+    <main>
 
-                <label for="review">Customer Review</label>
+        <div class="input-section">
 
-                <textarea
-                    id="review"
-                    maxlength="1000"
-                    placeholder="Enter a customer review..."
-                ></textarea>
+            <label for="model">Choose Language / Model</label>
 
-                <div class="character-count">
-                    <span id="charCount">0</span>/1000
-                </div>
+            <select id="model">
+                <option value="distilbert">
+                    English
+                </option>
 
-                <button id="analyzeBtn">
-                    Analyze Sentiment
-                </button>
+                <option value="xlm-roberta">
+                    বাংলা
+                </option>
+            </select>
+
+
+            <label for="review">Customer Review</label>
+
+            <textarea
+                id="review"
+                maxlength="1000"
+                placeholder="Enter a customer review..."
+            ></textarea>
+
+            <div class="character-count">
+                <span id="charCount">0</span>/1000
+            </div>
+
+            <button id="analyzeBtn">
+                Analyze Sentiment
+            </button>
+
+        </div>
+
+
+        <div id="loading" class="loading hidden">
+            Analyzing...
+        </div>
+
+
+        <div id="result" class="result hidden">
+
+            <h2>Analysis Result</h2>
+
+            <div class="sentiment-box">
+
+                <span>Sentiment</span>
+
+                <strong id="sentiment">
+                    -
+                </strong>
 
             </div>
 
 
-            <div id="loading" class="loading hidden">
-                Analyzing...
-            </div>
+            <div class="confidence">
 
+                <div class="confidence-header">
 
-            <div id="result" class="result hidden">
+                    <span>Confidence</span>
 
-                <h2>Analysis Result</h2>
-
-                <div class="sentiment-box">
-
-                    <span>Sentiment</span>
-
-                    <strong id="sentiment">
-                        -
-                    </strong>
+                    <span id="confidenceValue">
+                        0%
+                    </span>
 
                 </div>
 
+                <div class="progress-bar">
 
-                <div class="confidence">
-
-                    <div class="confidence-header">
-                        <span>Confidence</span>
-                        <span id="confidenceValue">0%</span>
-                    </div>
-
-                    <div class="progress-bar">
-                        <div
-                            id="confidenceBar"
-                            class="progress"
-                        ></div>
-                    </div>
-
-                </div>
-
-
-                <div class="probabilities">
-
-                    <h3>Class Probabilities</h3>
-
-                    <div class="probability-row">
-                        <span>Negative</span>
-                        <span id="negativeProbability">0%</span>
-                    </div>
-
-                    <div class="probability-row">
-                        <span>Neutral</span>
-                        <span id="neutralProbability">0%</span>
-                    </div>
-
-                    <div class="probability-row">
-                        <span>Positive</span>
-                        <span id="positiveProbability">0%</span>
-                    </div>
+                    <div
+                        id="confidenceBar"
+                        class="progress"
+                    ></div>
 
                 </div>
 
             </div>
 
 
-            <div id="error" class="error hidden"></div>
+            <div class="probabilities">
 
-        </main>
-        <footer>Developed by JR. Joy</footer>
-    </div>
+                <h3>Class Probabilities</h3>
 
-    <script src="script.js"></script>
+                <div class="probability-row">
+                    <span>Negative</span>
+                    <span id="negativeProbability">0%</span>
+                </div>
+
+                <div class="probability-row">
+                    <span>Neutral</span>
+                    <span id="neutralProbability">0%</span>
+                </div>
+
+                <div class="probability-row">
+                    <span>Positive</span>
+                    <span id="positiveProbability">0%</span>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div id="error" class="error hidden"></div>
+
+    </main>
+
+
+    <footer>
+        Developed by JR. Joy
+    </footer>
+
+</div>
+
+
+<script src="script.js"></script>
+
 
 </body>
 

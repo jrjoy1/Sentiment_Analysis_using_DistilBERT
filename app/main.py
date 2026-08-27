@@ -5,11 +5,23 @@ from app.model import predict_sentiment
 from app.schemas import SentimentRequest, SentimentResponse
 
 
+# ==============================
+# FASTAPI APP
+# ==============================
+
 app = FastAPI(
-    title="Sentiment Analysis API",
-    description="Customer review sentiment classification using DistilBERT",
-    version="1.0.0",
+    title="Bangla & English Sentiment Analysis API",
+    description=(
+        "Customer review sentiment classification using "
+        "DistilBERT and XLM-RoBERTa."
+    ),
+    version="2.0.0",
 )
+
+
+# ==============================
+# CORS
+# ==============================
 
 app.add_middleware(
     CORSMiddleware,
@@ -19,12 +31,26 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+# ==============================
+# HOME
+# ==============================
+
 @app.get("/")
 def home():
+
     return {
-        "message": "Sentiment Analysis API is running locally!"
+        "message": "Sentiment Analysis API is running locally!",
+        "models": [
+            "distilbert",
+            "xlm-roberta"
+        ]
     }
 
+
+# ==============================
+# PREDICT
+# ==============================
 
 @app.post(
     "/predict",
@@ -33,14 +59,26 @@ def home():
 def predict(request: SentimentRequest):
 
     try:
-        result = predict_sentiment(request.text)
+
+        result = predict_sentiment(
+            request.text,
+            request.model
+        )
 
         return {
             "text": request.text,
             **result
         }
 
+    except ValueError as e:
+
+        raise HTTPException(
+            status_code=400,
+            detail=str(e)
+        )
+
     except Exception as e:
+
         raise HTTPException(
             status_code=500,
             detail=str(e)
