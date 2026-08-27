@@ -1,6 +1,6 @@
-# Customer Sentiment Analysis AI
+# 🤖 Customer Sentiment Analysis AI
 
-A professional end-to-end **Customer Sentiment Analysis System** built using **TF-IDF, Logistic Regression, DistilBERT, PyTorch, FastAPI, and JavaScript**.
+A professional end-to-end **Customer Sentiment Analysis System** built using **TF-IDF, Logistic Regression, DistilBERT, XLM-RoBERTa, PyTorch, FastAPI, and JavaScript**.
 
 The system analyzes customer reviews and classifies them into three sentiment categories:
 
@@ -8,22 +8,34 @@ The system analyzes customer reviews and classifies them into three sentiment ca
 * 🟡 **Neutral**
 * 🔴 **Negative**
 
-The final system provides sentiment prediction, confidence score, and class probabilities through a REST API and a modern web interface.
+The system provides:
+
+* Sentiment prediction
+* Confidence score
+* Probability for each sentiment class
+* REST API
+* Input validation
+* Automated API testing
+* Modern web frontend
+* English sentiment analysis using DistilBERT
+* Bangla sentiment analysis using XLM-RoBERTa
 
 ---
 
-## 📌 Project Overview
+# 📌 Project Overview
 
 Customer reviews contain valuable information about how customers feel about products and services.
 
-Manually analyzing thousands of reviews is difficult and time-consuming. This project aims to automate that process using Natural Language Processing and Machine Learning.
+Manually analyzing thousands of reviews is difficult and time-consuming. This project aims to automate that process using Natural Language Processing and Transformer-based Machine Learning.
 
 The project follows a complete machine-learning workflow:
 
 ```text
 Customer Reviews
        ↓
-Data Preparation
+Dataset Preparation
+       ↓
+Data Cleaning & Validation
        ↓
 Text Processing
        ↓
@@ -33,11 +45,13 @@ Traditional ML Baseline
        ↓
 Model Evaluation
        ↓
-DistilBERT Fine-Tuning
+Transformer Fine-Tuning
+       ↓
+DistilBERT Evaluation
+       ↓
+XLM-RoBERTa Evaluation
        ↓
 Model Comparison
-       ↓
-Final Model Selection
        ↓
 FastAPI REST API
        ↓
@@ -58,26 +72,33 @@ Neutral
 Positive
 ```
 
-### Performance Target
+## Performance Target
 
-The target for the project was:
+The target for the main sentiment classification system was:
 
 > **Macro F1 ≥ 0.85**
 
-Macro F1 was selected because the task contains three sentiment classes and each class should contribute equally to the overall evaluation.
+Macro F1 was selected because this is a three-class classification problem where each sentiment class should contribute equally to the overall evaluation.
 
 ---
 
 # 🧠 Model Development
 
-Instead of directly using a transformer model, the project first established a traditional machine-learning baseline.
+The project uses multiple approaches so that traditional machine learning can be compared with transformer-based NLP models.
 
-Two main approaches were evaluated:
+The main approaches are:
 
 1. **TF-IDF + Logistic Regression**
 2. **Fine-Tuned DistilBERT**
+3. **Fine-Tuned XLM-RoBERTa**
 
-This allows the final transformer model to be compared against a strong traditional NLP baseline.
+The models serve different purposes.
+
+| Model                        | Purpose                               | Main Language   | Role                 |
+| ---------------------------- | ------------------------------------- | --------------- | -------------------- |
+| TF-IDF + Logistic Regression | Traditional baseline                  | English/general | Baseline             |
+| DistilBERT                   | Main high-performance sentiment model | English/general | **Primary model**    |
+| XLM-RoBERTa                  | Bangla/multilingual sentiment         | Bangla          | **Additional model** |
 
 ---
 
@@ -106,7 +127,7 @@ TF-IDF + Logistic Regression was selected as the baseline because it is:
 | Target Macro F1 | **≥ 0.85** |
 | Target Achieved |  ✅ **Yes** |
 
-The baseline achieved a **Macro F1 of 0.8780**, successfully exceeding the target of **0.85**.
+The baseline achieved a **Macro F1 of 0.8780**, exceeding the target of 0.85.
 
 ## Baseline Classification Report
 
@@ -120,15 +141,15 @@ The baseline achieved a **Macro F1 of 0.8780**, successfully exceeding the targe
 
 The baseline performed best on the **positive** class.
 
-The **neutral** class was more difficult to classify, achieving an F1-score of **0.82**.
+The **neutral** class was more difficult to classify, with an F1-score of approximately **0.82**.
 
 ---
 
 # 2️⃣ Fine-Tuned DistilBERT
 
-After establishing the traditional machine-learning baseline, a pretrained **DistilBERT** model was fine-tuned for the same three-class sentiment classification task.
+After establishing the traditional baseline, a pretrained **DistilBERT** model was fine-tuned for the same three-class sentiment classification task.
 
-DistilBERT was selected because it provides transformer-based language understanding while being smaller and faster than larger BERT-family models.
+DistilBERT was selected because it provides transformer-based language understanding while being smaller and more efficient than full-sized BERT.
 
 The model predicts:
 
@@ -149,6 +170,15 @@ Positive
 | Target Macro F1 | **≥ 0.85** |
 | Target Achieved |  ✅ **Yes** |
 
+The final evaluation produced approximately:
+
+* Accuracy: **0.8991**
+* Precision: **0.8986**
+* Recall: **0.8991**
+* Macro F1: **0.8987**
+
+This makes DistilBERT the **best-performing model in the current project**.
+
 ## DistilBERT Classification Report
 
 | Sentiment        | Precision |   Recall | F1-score |   Support |
@@ -161,156 +191,270 @@ Positive
 
 ---
 
-# 📊 Baseline vs DistilBERT
+# 3️⃣ XLM-RoBERTa for Bangla Sentiment Analysis
 
-Both models were evaluated on the same evaluation set containing **7,671 samples**.
+To extend the system beyond the primary English/general sentiment model, an additional **XLM-RoBERTa** model was fine-tuned for Bangla sentiment classification.
 
-| Model                        | Accuracy | Precision |   Recall |   Macro F1 |
-| ---------------------------- | -------: | --------: | -------: | ---------: |
-| TF-IDF + Logistic Regression | **0.88** |  **0.88** | **0.88** | **0.8780** |
-| **Fine-Tuned DistilBERT**    | **0.90** |  **0.90** | **0.90** |   **0.90** |
-| Target                       |        — |         — |        — | **≥ 0.85** |
+XLM-RoBERTa is a multilingual transformer model and is more suitable for multilingual text than an English-only DistilBERT model.
 
-## Performance Improvement
+The Bangla model predicts:
 
-Macro F1 improved from:
+```text
+Negative
+Neutral
+Positive
+```
+
+## XLM-RoBERTa Dataset
+
+The XLM-RoBERTa experiment used a separate Bangla sentiment dataset.
+
+The final dataset validation showed:
+
+```text
+Train samples: 17,095
+
+Labels:
+0 → 5,659
+1 → 5,761
+2 → 5,675
+
+Missing text: 0
+Missing label: 0
+Duplicate texts: 0
+```
+
+The dataset was therefore:
+
+* Free from missing text
+* Free from missing labels
+* Free from duplicate texts
+* Reasonably balanced across the three classes
+
+## XLM-RoBERTa Training
+
+The model was trained for:
+
+```text
+Epochs: 3
+```
+
+The validation results were:
+
+| Epoch | Validation Loss |   Accuracy | Precision | Recall |         F1 |
+| ----- | --------------: | ---------: | --------: | -----: | ---------: |
+| 1     |          0.6285 |     0.7651 |    0.7916 | 0.7661 |     0.7658 |
+| 2     |          0.5618 |     0.7843 |    0.8014 | 0.7845 |     0.7848 |
+| 3     |          0.5937 | **0.7880** |    0.7947 | 0.7882 | **0.7883** |
+
+The best reported final validation result was approximately:
+
+> **Validation Macro F1 = 0.7883**
+
+---
+
+# ⚠️ Dataset Considerations
+
+One important issue discovered during development was the difference in dataset size and composition between the main sentiment model and the Bangla XLM-RoBERTa experiment.
+
+The main DistilBERT evaluation was performed using a much larger dataset, while the Bangla XLM-RoBERTa experiment used **17,095 training samples**.
+
+This difference matters because transformer models generally benefit from having sufficient high-quality training data that represents the language and domain they will encounter.
+
+The Bangla dataset was balanced and had no missing or duplicate text in the final check, but it was still considerably smaller than the dataset used for the main sentiment model.
+
+Therefore, the lower XLM-RoBERTa score should **not automatically be interpreted as XLM-RoBERTa being a worse architecture**.
+
+The result is affected by factors such as:
+
+* Dataset size
+* Dataset quality
+* Bangla language coverage
+* Domain differences
+* Vocabulary
+* Review-writing style
+* Training configuration
+* Amount of training data
+* Distribution of sentiment expressions
+
+A larger and more diverse Bangla dataset could potentially improve the XLM-RoBERTa model substantially.
+
+---
+
+# 📊 Model Performance Comparison
+
+The current experiments show that **DistilBERT provides the best measured performance** in this project.
+
+| Model                        | Language / Use |   Accuracy |  Precision |     Recall |   Macro F1 |
+| ---------------------------- | -------------- | ---------: | ---------: | ---------: | ---------: |
+| TF-IDF + Logistic Regression | Main baseline  | **0.8786** | **0.8778** | **0.8787** | **0.8780** |
+| **Fine-Tuned DistilBERT**    | Main model     | **0.8991** | **0.8986** | **0.8991** | **0.8987** |
+| XLM-RoBERTa                  | Bangla model   | **0.7880** | **0.7947** | **0.7882** | **0.7883** |
+
+> **Note:** The XLM-RoBERTa numbers above are validation results, while the DistilBERT numbers are from the final evaluation/test workflow. They should therefore be interpreted as indicative model results rather than a perfectly controlled apples-to-apples comparison.
+
+---
+
+# 🏆 Current Best Model
+
+Based on the measured results, **Fine-Tuned DistilBERT is currently the best-performing model**.
+
+Its Macro F1 is approximately:
+
+```text
+DistilBERT
+    0.8987
+```
+
+compared with:
 
 ```text
 TF-IDF + Logistic Regression
-        0.8780
-           ↓
-Fine-Tuned DistilBERT
-        0.9000
+    0.8780
 ```
 
-### Absolute improvement
+Therefore, DistilBERT remains the **primary production model** for the main sentiment-analysis pipeline.
+
+XLM-RoBERTa is included as an additional model specifically to extend the system to **Bangla/multilingual sentiment analysis**.
+
+---
+
+# 📈 DistilBERT vs TF-IDF
+
+The Macro F1 improvement was:
 
 ```text
-0.9000 - 0.8780 = 0.0220
+0.8987 - 0.8780
+= 0.0207
 ```
 
-The final model achieved an absolute Macro F1 improvement of:
+Therefore, DistilBERT improved the measured Macro F1 by approximately:
+
+> **+0.0207**
+
+Using rounded values:
+
+```text
+0.90 - 0.8780
+= 0.0220
+```
+
+So the rounded improvement is approximately:
 
 > **+0.0220**
-
-This demonstrates that the fine-tuned transformer model provided better overall sentiment classification performance than the traditional baseline.
 
 ---
 
 # 🔎 Class-Level Comparison
 
-| Sentiment | Baseline F1 | DistilBERT F1 | Improvement |
-| --------- | ----------: | ------------: | ----------: |
-| Negative  |        0.88 |      **0.90** |       +0.02 |
-| Neutral   |        0.82 |      **0.85** |       +0.03 |
-| Positive  |        0.93 |      **0.95** |       +0.02 |
+| Sentiment | TF-IDF F1 | DistilBERT F1 | Improvement |
+| --------- | --------: | ------------: | ----------: |
+| Negative  |      0.88 |      **0.90** |       +0.02 |
+| Neutral   |      0.82 |      **0.85** |       +0.03 |
+| Positive  |      0.93 |      **0.95** |       +0.02 |
 
-The largest class-level improvement occurred for the **neutral** class.
+The largest improvement occurred in the **neutral** class.
 
-Its F1-score increased from:
+Its F1-score increased approximately from:
 
 ```text
 0.82 → 0.85
 ```
 
-This indicates that DistilBERT handled ambiguous or moderately expressed sentiment better than the TF-IDF + Logistic Regression baseline.
+This indicates that the transformer model was better at handling ambiguous or moderately expressed sentiment than the traditional TF-IDF baseline.
 
 ---
 
-# 🏆 Final Model Selection
+# 🏗️ Current System Architecture
 
-The experiments demonstrate that traditional NLP techniques can provide a strong baseline.
-
-However, the fine-tuned DistilBERT model achieved better overall performance across the main evaluation metrics.
-
-Therefore:
-
-> **Fine-Tuned DistilBERT was selected as the final production model.**
-
-The final development pipeline was:
+The current system contains two transformer models:
 
 ```text
-Customer Reviews
-       ↓
-     TF-IDF
-       ↓
-Logistic Regression
-       ↓
-Baseline
-Macro F1 = 0.8780
-       ↓
-   DistilBERT
-       ↓
-   Fine-Tuning
-       ↓
-Final Model
-Macro F1 = 0.90
-       ↓
-    FastAPI
-       ↓
- Web Frontend
+                         Customer Review
+                               │
+                               ▼
+                         FastAPI API
+                               │
+                         Model Selection
+                         ┌─────┴─────┐
+                         │           │
+                         ▼           ▼
+                    DistilBERT   XLM-RoBERTa
+                    Main Model   Bangla Model
+                         │           │
+                         └─────┬─────┘
+                               ▼
+                         Sentiment
+                               │
+                ┌──────────────┼──────────────┐
+                ▼              ▼              ▼
+             Negative       Neutral        Positive
+                │              │              │
+                └──────────────┼──────────────┘
+                               ▼
+                       Confidence Score
+                               │
+                               ▼
+                       Class Probabilities
+                               │
+                               ▼
+                         JSON Response
+                               │
+                               ▼
+                         Web Frontend
 ```
 
 ---
 
 # 🤖 Model Configuration
 
-The final model is based on **DistilBERT** and was fine-tuned for three-class sentiment classification.
+## DistilBERT
 
-### Training configuration
+The primary model is based on:
 
-| Parameter               | Value      |
-| ----------------------- | ---------- |
-| Architecture            | DistilBERT |
-| Number of Classes       | 3          |
-| Epochs                  | 3          |
-| Batch Size              | 16         |
-| Learning Rate           | 5e-5       |
-| Maximum Sequence Length | 128        |
-| Inference Device        | CPU        |
+```text
+Architecture: DistilBERT
+Classes: 3
+Epochs: 3
+Batch Size: 16
+Learning Rate: 5e-5
+Maximum Sequence Length: 128
+Inference Device: CPU
+```
+
+Model:
+
+```text
+mdjrjoy/distilbert-fine-tuned
+```
 
 ---
 
-# 🚀 API
+## XLM-RoBERTa
 
-The trained model is integrated into a **FastAPI REST API**.
+The additional Bangla model is loaded from:
+
+```text
+mdjrjoy/xlm-roberta-based
+```
+
+It is used for multilingual/Bangla sentiment prediction.
+
+---
+
+# 🚀 FastAPI REST API
+
+The trained models are integrated into a **FastAPI REST API**.
 
 The API provides:
 
 * Sentiment prediction
+* Model selection
 * Confidence score
 * Probability for each sentiment class
 * Input validation
 * Automatic API documentation
-
-## API Architecture
-
-```text
-Client
-  │
-  │ POST /predict
-  ▼
-FastAPI
-  │
-  ▼
-Pydantic Validation
-  │
-  ▼
-Tokenizer
-  │
-  ▼
-DistilBERT
-  │
-  ▼
-Softmax
-  │
-  ├── Negative probability
-  ├── Neutral probability
-  └── Positive probability
-  │
-  ▼
-JSON Response
-```
+* Error handling
 
 ---
 
@@ -320,7 +464,7 @@ JSON Response
 
 Checks whether the API is running.
 
-Example response:
+Example:
 
 ```json
 {
@@ -330,85 +474,108 @@ Example response:
 
 ---
 
-## POST `/predict`
+# POST `/predict`
 
 Analyzes a customer review.
 
-### Request
+The API supports model selection.
+
+## DistilBERT Request
 
 ```json
 {
-  "text": "This product is amazing and I love it!"
+  "text": "I really love this product!",
+  "model": "distilbert"
 }
 ```
 
-### Response
+## XLM-RoBERTa Request
 
 ```json
 {
-  "sentiment": "positive",
-  "confidence": 0.9547,
+  "text": "এই পণ্যটি অনেক ভালো",
+  "model": "xlm-roberta"
+}
+```
+
+## XLM-RoBERTa Example Response
+
+```json
+{
+  "text": "এই পণ্যটি অনেক ভালো",
+  "sentiment": "POSITIVE",
+  "confidence": 0.9434,
   "probabilities": {
-    "negative": 0.0012,
-    "neutral": 0.044,
-    "positive": 0.9547
-  }
+    "NEUTRAL": 0.0418,
+    "POSITIVE": 0.9434,
+    "NEGATIVE": 0.0148
+  },
+  "model": "xlm-roberta"
 }
 ```
+
+The exact confidence and probability values can vary depending on the input.
 
 ---
 
-# 🧪 Example Predictions
+# 🧠 Prediction Process
 
-### Positive
-
-Input:
+The prediction pipeline works approximately as follows:
 
 ```text
-This product is amazing and I love it!
+Input Review
+     ↓
+Select Model
+     ↓
+Select Tokenizer
+     ↓
+Tokenization
+     ↓
+Transformer Model
+     ↓
+Logits
+     ↓
+Softmax
+     ↓
+Class Probabilities
+     ↓
+Highest Probability Class
+     ↓
+Sentiment + Confidence
 ```
 
-Output:
-
-```json
-{
-  "sentiment": "positive",
-  "confidence": 0.9547
-}
-```
-
-### Neutral
-
-Input:
+For example:
 
 ```text
-The product is okay, nothing special.
-```
-
-Output:
-
-```json
-{
-  "sentiment": "neutral",
-  "confidence": 0.913
-}
-```
-
-### Negative
-
 Input:
+এই পণ্যটি অনেক ভালো
 
-```text
-Very bad quality, I regret buying it.
-```
+        ↓
 
-Output:
+XLM-RoBERTa Tokenizer
 
-```json
-{
-  "sentiment": "negative",
-  "confidence": 0.9881
-}
+        ↓
+
+XLM-RoBERTa
+
+        ↓
+
+Logits
+
+        ↓
+
+Softmax
+
+        ↓
+
+Positive = 0.9434
+Neutral  = 0.0418
+Negative = 0.0148
+
+        ↓
+
+Prediction:
+POSITIVE
 ```
 
 ---
@@ -431,52 +598,42 @@ The frontend allows users to:
 6. Display confidence.
 7. Display probabilities for all three classes.
 
+The frontend communicates with the FastAPI backend through:
+
 ```text
-┌─────────────────────────────────────┐
-│     Customer Sentiment Analysis     │
-│                                     │
-│  Enter Customer Review              │
-│  ┌───────────────────────────────┐  │
-│  │ This product is excellent!    │  │
-│  │                               │  │
-│  └───────────────────────────────┘  │
-│                                     │
-│       [ Analyze Sentiment ]         │
-│                                     │
-│  Sentiment              POSITIVE   │
-│  Confidence               95.65%   │
-│                                     │
-│  Negative                0.09%     │
-│  Neutral                 4.26%     │
-│  Positive               95.65%     │
-└─────────────────────────────────────┘
+POST /predict
 ```
 
 ---
 
-# 🧪 Testing
+# 🧪 API Testing
 
-The API was tested using **pytest** and FastAPI's testing utilities.
+The API was tested using:
 
-The test suite verifies:
+* **pytest**
+* **FastAPI TestClient**
+
+The final test suite successfully passed:
+
+```text
+8 passed
+```
+
+The tests verify:
 
 * API health
 * Positive sentiment prediction
 * Negative sentiment prediction
 * Neutral sentiment prediction
-* Input validation
-* API response structure
+* DistilBERT model selection
+* XLM-RoBERTa model selection
+* Empty input validation
+* Maximum text-length validation
 
-Run the tests with:
+The test suite can be executed using:
 
 ```bash
 python -m pytest -v
-```
-
-Example:
-
-```text
-4 passed
 ```
 
 ---
@@ -489,28 +646,22 @@ sentiment_analysis_project/
 ├── app/
 │   ├── __init__.py
 │   ├── main.py
-│   └── ...
-│
-├── tests/
-│   └── test_api.py
+│   ├── model.py
+│   ├── schemas.py
+│   └── tests/
+│       └── test_api.py
 │
 ├── frontend/
 │   ├── index.html
 │   ├── style.css
 │   └── script.js
 │
-├── Model/
-│   └── distilbert_final/
-│       ├── config.json
-│       ├── model.safetensors
-│       ├── tokenizer.json
-│       ├── tokenizer_config.json
-│       └── training_args.bin
-│
 ├── requirements.txt
 ├── .gitignore
 └── README.md
 ```
+
+The trained models are hosted separately and loaded by the application.
 
 ---
 
@@ -522,14 +673,16 @@ sentiment_analysis_project/
 * PyTorch
 * Hugging Face Transformers
 * DistilBERT
+* XLM-RoBERTa
 * Scikit-learn
 
 ## NLP
 
 * TF-IDF
-* Text classification
+* Text Classification
 * Tokenization
 * Transformer-based NLP
+* Multilingual NLP
 
 ## Backend
 
@@ -547,6 +700,10 @@ sentiment_analysis_project/
 
 * pytest
 * FastAPI TestClient
+
+## Model Hosting
+
+* Hugging Face Hub
 
 ---
 
@@ -605,7 +762,7 @@ Open:
 http://127.0.0.1:8000/docs
 ```
 
-This allows you to test `/predict` directly from the browser.
+The Swagger interface allows you to directly test the `/predict` endpoint.
 
 ---
 
@@ -617,11 +774,11 @@ Open:
 frontend/index.html
 ```
 
-in your browser.
+in a browser.
 
 For development, VS Code **Live Server** can be used.
 
-The frontend communicates with:
+The frontend sends requests to:
 
 ```text
 http://127.0.0.1:8000/predict
@@ -631,35 +788,84 @@ http://127.0.0.1:8000/predict
 
 # 📦 Dependencies
 
-The main environment used for the project includes:
+The project uses packages including:
 
 ```text
-torch==2.8.0+cpu
-transformers==4.56.2
-fastapi==0.117.1
-uvicorn==0.36.0
-pydantic==2.11.7
+torch
+transformers
+fastapi
+uvicorn
+pydantic
+scikit-learn
+pytest
 ```
 
-Additional packages required for training and testing should be included in `requirements.txt`.
+The exact versions used for deployment should be maintained in:
+
+```text
+requirements.txt
+```
 
 ---
 
 # ⚠️ Limitations
 
-Although the final model achieved strong evaluation performance, sentiment classification is not perfect.
+Although the models achieve strong performance, sentiment classification is not perfect.
 
-The model may struggle with:
+The system may struggle with:
 
 * Sarcasm
 * Very short reviews
 * Ambiguous statements
 * Mixed sentiment
 * Unusual spelling
+* Bangla spelling variations
+* Banglish text
 * Domain-specific terminology
-* Text that differs significantly from the training data
+* Unseen vocabulary
+* Text significantly different from the training data
 
-The confidence score represents the model's predicted probability and should not be interpreted as guaranteed correctness.
+The confidence score represents the model's predicted probability and should not be interpreted as a guarantee of correctness.
+
+---
+
+# 📊 Important Dataset Limitation
+
+A major consideration in the project is **dataset quality and size**.
+
+The main DistilBERT model was trained and evaluated using a substantially larger dataset than the Bangla XLM-RoBERTa experiment.
+
+The Bangla XLM-RoBERTa training dataset contained:
+
+```text
+17,095 training samples
+```
+
+Although the dataset was balanced and had:
+
+```text
+Missing text: 0
+Missing labels: 0
+Duplicate texts: 0
+```
+
+the overall amount of training data was still relatively limited compared with the main sentiment dataset.
+
+As a result, the XLM-RoBERTa model achieved a lower validation Macro F1:
+
+```text
+0.7883
+```
+
+compared with the main DistilBERT model:
+
+```text
+≈ 0.8987
+```
+
+This is one of the main areas that can be improved in future development.
+
+A larger, cleaner, and more diverse Bangla customer-review dataset would likely provide a stronger basis for improving Bangla sentiment classification.
 
 ---
 
@@ -667,6 +873,9 @@ The confidence score represents the model's predicted probability and should not
 
 Potential future improvements include:
 
+* Larger Bangla sentiment dataset
+* More diverse Bangla customer reviews
+* Banglish sentiment support
 * Batch CSV sentiment analysis
 * Customer sentiment dashboard
 * Sentiment distribution visualization
@@ -676,81 +885,98 @@ Potential future improvements include:
 * Request logging
 * Monitoring
 * Model versioning
-* Larger and more diverse datasets
 * Hyperparameter optimization
-* Comparison with additional transformer models
+* Better multilingual model comparison
+* Improved Bangla preprocessing
 * Explainable AI features
 
 ---
 
-# 📈 Project Workflow Summary
+# 📈 Complete Project Workflow
 
 ```text
-                    DATASET
-                       │
-                       ▼
-              Data Preparation
-                       │
-                       ▼
-                Text Processing
-                       │
-             ┌─────────┴─────────┐
-             ▼                   ▼
-          TF-IDF             DistilBERT
-             │                   │
-             ▼                   ▼
-       Logistic Regression    Fine-Tuning
-             │                   │
-             ▼                   ▼
-        Baseline Model       Transformer Model
-             │                   │
-             └─────────┬─────────┘
-                       ▼
-                 Model Evaluation
-                       │
-                       ▼
-                Model Comparison
-                       │
-                       ▼
-             Final DistilBERT Model
-                       │
-                       ▼
-                    FastAPI
-                       │
-                       ▼
-                 Web Frontend
-                       │
-                       ▼
-              Customer Sentiment
+                         DATASET
+                            │
+                            ▼
+                  Data Preparation
+                            │
+                            ▼
+                 Data Validation
+                            │
+                            ▼
+                    Text Processing
+                            │
+             ┌──────────────┴──────────────┐
+             │                             │
+             ▼                             ▼
+           TF-IDF                     Transformers
+             │                       ┌─────┴─────┐
+             ▼                       ▼           ▼
+     Logistic Regression         DistilBERT   XLM-RoBERTa
+             │                       │           │
+             ▼                       ▼           ▼
+       Baseline Model          Main Model    Bangla Model
+             │                       │           │
+             └──────────────┬────────┴───────────┘
+                            ▼
+                     Model Evaluation
+                            │
+                            ▼
+                     Model Comparison
+                            │
+             ┌──────────────┴──────────────┐
+             │                             │
+             ▼                             ▼
+        Best Main Model              Bangla Extension
+         DistilBERT                  XLM-RoBERTa
+             │                             │
+             └──────────────┬──────────────┘
+                            ▼
+                         FastAPI
+                            │
+                            ▼
+                      REST API
+                            │
+                            ▼
+                      Web Frontend
+                            │
+                            ▼
+                  Customer Sentiment
 ```
 
 ---
 
 # 🎓 Key Results
 
-The project successfully developed an end-to-end customer sentiment analysis system.
-
-### Baseline
+## Baseline
 
 **TF-IDF + Logistic Regression**
 
 > Macro F1 = **0.8780**
 
-### Final Model
+## Main Model
 
 **Fine-Tuned DistilBERT**
 
-> Macro F1 = **0.90**
+> Macro F1 ≈ **0.8987**
 
-### Target
+## Bangla Model
+
+**Fine-Tuned XLM-RoBERTa**
+
+> Validation Macro F1 = **0.7883**
+
+## Target
 
 > Macro F1 ≥ **0.85**
 
-### Result
+## Main Result
 
-> ✅ **Target exceeded**
+> ✅ **The primary DistilBERT model exceeded the target.**
 
-The final DistilBERT model improved Macro F1 by **0.0220** compared with the TF-IDF + Logistic Regression baseline.
+The DistilBERT model currently provides the strongest measured performance and is therefore used as the **primary model**.
+
+XLM-RoBERTa extends the project toward **Bangla/multilingual sentiment analysis**, but its current performance is lower due in part to the smaller Bangla training dataset and different dataset characteristics.
 
 ---
 
@@ -763,35 +989,58 @@ Computer Science & Engineering
 This project demonstrates an end-to-end machine-learning workflow covering:
 
 ```text
-Data
-→ NLP
-→ Traditional ML
-→ Transformer Fine-Tuning
-→ Evaluation
-→ API Development
-→ Testing
-→ Frontend Integration
+Dataset Preparation
+        ↓
+NLP
+        ↓
+Traditional Machine Learning
+        ↓
+TF-IDF
+        ↓
+Logistic Regression
+        ↓
+Transformer Fine-Tuning
+        ↓
+DistilBERT
+        ↓
+XLM-RoBERTa
+        ↓
+Model Evaluation
+        ↓
+Model Comparison
+        ↓
+FastAPI
+        ↓
+API Testing
+        ↓
+Web Frontend
 ```
 
 ---
 
-## ⭐ Project Status
+# ⭐ Project Status
 
-**Completed core ML pipeline and API integration.**
+**Core sentiment-analysis system completed.**
 
 Current system includes:
 
 * ✅ Dataset preparation
+* ✅ Dataset validation
 * ✅ TF-IDF baseline
 * ✅ Logistic Regression
 * ✅ Baseline evaluation
 * ✅ DistilBERT fine-tuning
-* ✅ Model evaluation
+* ✅ DistilBERT evaluation
+* ✅ XLM-RoBERTa fine-tuning
+* ✅ Bangla sentiment model
 * ✅ Model comparison
+* ✅ Hugging Face model hosting
 * ✅ FastAPI backend
 * ✅ REST API
+* ✅ Model selection through API
 * ✅ Frontend
 * ✅ API testing
+* ✅ 8 automated tests passing
 * ✅ Local CPU inference
 
-Future work focuses on productionization, deployment, monitoring, and additional model improvements.
+The next stage focuses on **improving the Bangla dataset/model, deployment, monitoring, and productionization**.
